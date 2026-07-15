@@ -46,4 +46,5 @@ Se recomienda un navegador Chromium/Safari/Firefox actualizado (2024+) para ver 
 Fuentes tipográficas: [Satoshi](https://assets.codepen.io/308367/Satoshi-Variable.ttf) y [Cascadia Code](https://assets.codepen.io/308367/CascadiaCode-Regular.woff2).
 
 > [codepen](https://codepen.io/editor/kevinpowell/pen/019edbf1-79cb-739e-a285-9780858eb92e)
+
 > [daily.dev](https://dly.to/Uwq1rLG4iul)
