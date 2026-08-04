@@ -1,0 +1,84 @@
+<html>
+<style>
+
+.elipse-responsive {
+  /* Ancho base y límite máximo */
+  width: 90%;
+  max-width: 277px;
+  
+  /* Mantiene la proporción 277:309 dinámicamente */
+  aspect-ratio: 277 / 309;
+  
+  /* Forma y estilos */
+  border-radius: 50%;
+  background-color: #6495ed;
+  
+  /* Centrado automático en la página para evitar desbordamiento */
+  margin: 20px auto;
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+.elipse-posicionada {
+  /* Dimensiones en porcentaje del ancho de pantalla */
+  width: 25vw; /* 25% del ancho de la pantalla */
+  height: 30vw; /* Altura proporcional */
+  max-width: 277px;
+  max-height: 309px;
+  
+  border-radius: 50%;
+  background-color: #6495ed;
+  
+  /* Posicionamiento porcentual en lugar de 215px/197px */
+  position: absolute;
+  left: 20%;
+  top: 15%;
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+.contenedor-responsive {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  background-color: #ff6b6b;
+  
+  /* ellipse(radioX radioY at centroX centroY) en porcentajes */
+  clip-path: ellipse(25% 35% at 50% 50%);
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+.elipse-adaptable {
+  width: 277px;
+  height: 309px;
+  border-radius: 50%;
+  background-color: #6495ed;
+  position: absolute;
+  left: 215px;
+  top: 197px;
+}
+
+/* En pantallas de menos de 600px de ancho */
+@media (max-width: 600px) {
+  .elipse-adaptable {
+    width: 150px;
+    height: 167px;
+    left: 10px;
+    top: 10px;
+  }
+}
+
+</style>
+
+<div class="elipse-responsive"></div>
+</html>

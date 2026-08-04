@@ -1,0 +1,87 @@
+<html>
+<style>
+.elipse {
+  /* Dimensiones */
+  width: 277px;
+  height: 309px;
+  
+  /* Forma de elipse */
+  border-radius: 50%;
+  
+  /* Estilo y color */
+  background-color: #6495ed;
+  border: 2px solid #000;
+  
+  /* Posición en pantalla (X=215px, Y=197px) */
+  position: absolute;
+  left: 215px;
+  top: 197px;
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+.elipse-animada {
+  width: 277px;
+  height: 309px;
+  border-radius: 50%;
+  background-color: #6495ed;
+  position: absolute;
+  left: 615px;
+  top: 197px;
+  
+  /* Aplicar la animación: nombre, duración, tipo de curva e repetición */
+  animation: latido 2s ease-in-out infinite alternate;
+}
+
+/* Definición de la animación */
+@keyframes latido {
+  0% {
+    transform: scale(1) translate(0, 0);
+    background-color: #6495ed;
+  }
+  50% {
+    /* Crece un 20% y cambia de color */
+    transform: scale(1.2) translate(20px, -10px);
+    background-color: #ff6b6b;
+  }
+  100% {
+    /* Vuelve al tamaño original pero se desplaza */
+    transform: scale(1) translate(0, 40px);
+    background-color: #4caf50;
+  }
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+.contenedor-recorte {
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(45deg, #ff9a9e, #fecfef);
+  
+  /* Aplicar animación al recorte */
+  animation: deformarElipse 3s infinite alternate ease-in-out;
+}
+
+@keyframes deformarElipse {
+  0% {
+    /* Estado inicial: radios de 138.5px y 154.5px centrado en (215px, 197px) */
+    clip-path: ellipse(138.5px 154.5px at 215px 197px);
+  }
+  100% {
+    /* La elipse se expande y se mueve hacia la derecha */
+    clip-path: ellipse(200px 100px at 400px 300px);
+  }
+}
+</style>
+<div class="elipse-animada"></div>
+
+<div class="elipse"></div>
+
+<div class="contenedor-recorte"></div>
+</html>
