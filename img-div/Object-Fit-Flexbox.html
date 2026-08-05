@@ -1,0 +1,47 @@
+<html>
+<style>
+
+/* Contenedor principal */
+.galeria-flex {
+  display: flex;            /* Activa el diseño flexible */
+  flex-wrap: wrap;          /* Envía las imágenes abajo si no caben en la pantalla */
+  gap: 20px;                /* Controla la separación entre los divs */
+  justify-content: center;  /* Centra horizontalmente los elementos */
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+/* Divs individuales */
+.tarjeta-imagen {
+  width: 250px;             /* Ancho fijo para cada bloque */
+  height: 250px;            /* Alto fijo para cada bloque */
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+/* Estilo común de las imágenes */
+.tarjeta-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* Aplica el ajuste */
+}
+
+
+
+</style>
+
+<div class="galeria-flex">
+  <div class="tarjeta-imagen"><img src="model_over_20.jpeg" alt="Uno"></div>
+  <div class="tarjeta-imagen"><img src="model_over_35.png" alt="Dos"></div>
+  <div class="tarjeta-imagen"><img src="others_oils.jpeg" alt="Tres"></div>
+</div>
+
+
+
+</html>
