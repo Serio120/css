@@ -1,5 +1,6 @@
 # Método 1: Distribución en columnas y filas (Flexbox)
 
+```
 <div class="galeria-flex">
   <div class="tarjeta-imagen"><img src="imagen1.jpg" alt="Uno"></div>
   <div class="tarjeta-imagen"><img src="imagen2.jpg" alt="Dos"></div>
@@ -90,3 +91,4 @@
   height: 100%;
   object-fit: cover;
 }
+```
