@@ -1,0 +1,49 @@
+<html>
+<style>
+
+
+/* El contenedor de referencia debe tener posición relativa */
+.contenedor-padre {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background-color: #f0f0f0;
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+/* El div que se moverá a tu gusto */
+.imagen-libre {
+  position: absolute;       /* Permite coordenadas exactas respecto al padre */
+  top: 20px;                /* Distancia desde arriba */
+  right: 20px;              /* Distancia desde la derecha */
+  width: 120px;
+  height: 120px;
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+.imagen-libre img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+
+</style>
+
+<div class="contenedor-padre">
+  <div class="imagen-libre"><img src="model_over_35.png" alt="Flotante"></div>
+</div>
+
+
+
+
+</html>

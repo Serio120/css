@@ -1,0 +1,51 @@
+<html>
+<style>
+
+/* Contenedor principal */
+.galeria-grid {
+  display: grid;
+  /* Crea columnas automáticas de mínimo 200px que llenan el espacio disponible */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;                /* Espacio entre celdas */
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+/* Divs individuales */
+.bloque-img {
+  height: 200px;            /* El alto define la caja para el object-fit */
+}
+
+/*
+*********************************************************
+*******************************************************
+*/
+
+/* Ajuste de las imágenes */
+.bloque-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+
+</style>
+
+<div class="galeria-flex">
+  <div class="tarjeta-imagen"><img src="model_over_20.jpeg" alt="Uno"></div>
+  <div class="tarjeta-imagen"><img src="model_over_35.png" alt="Dos"></div>
+  <div class="tarjeta-imagen"><img src="others_oils.jpeg" alt="Tres"></div>
+</div>
+
+<div class="galeria-grid">
+  <div class="bloque-img"><img src="model_over_20.jpeg" alt="1"></div>
+  <div class="bloque-img"><img src="model_over_35.png" alt="2"></div>
+  <div class="bloque-img"><img src="others_oils.jpeg" alt="3"></div>
+  <div class="bloque-img"><img src="others_oils.jpeg" alt="4"></div>
+</div>
+
+</html>
