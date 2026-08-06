@@ -1,5 +1,6 @@
 # Método 1: Distribución en columnas y filas (Flexbox)
 
+```
 <div class="galeria-flex">
   <div class="tarjeta-imagen"><img src="imagen1.jpg" alt="Uno"></div>
   <div class="tarjeta-imagen"><img src="imagen2.jpg" alt="Dos"></div>
@@ -26,11 +27,12 @@
   height: 100%;
   object-fit: cover;        /* Aplica el ajuste */
 }
-
+```
 
 
 # Método 2: Diseño en cuadrícula exacta (CSS Grid)
 
+```
 <div class="galeria-grid">
   <div class="bloque-img"><img src="img1.jpg" alt="1"></div>
   <div class="bloque-img"><img src="img2.jpg" alt="2"></div>
@@ -57,11 +59,12 @@
   height: 100%;
   object-fit: cover;
 }
-
+```
 
 
 # Método 3: Posición libre o superpuesta (Absolute)
 
+```
 <div class="contenedor-padre">
   <div class="imagen-libre"><img src="flotante.jpg" alt="Flotante"></div>
 </div>
@@ -90,3 +93,4 @@
   height: 100%;
   object-fit: cover;
 }
+```
