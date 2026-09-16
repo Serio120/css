@@ -1,4 +1,4 @@
-# Header & Footer Parallax 🌄
+# Semantic Parallax 🌄
 
 Un efectillo parallax hecho con jQuery puro, sin frameworks raros ni build tools. El header y el footer se quedan fijos mientras el contenido hace scroll por encima, tipo capas de cebolla.
 
