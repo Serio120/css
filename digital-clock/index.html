@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>World Clock</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Live time zones</p>
+      <h1 id="page-title">World Clock</h1>
+      <p class="intro">Keep track of the current time in cities around the world.</p>
+    </section>
+
+    <section class="clock-grid" aria-label="World clocks">
+      <article class="clock-card" data-time-zone="America/New_York" data-city="New York">
+        <div class="card-heading">
+          <div>
+            <h2>New York</h2>
+            <p class="zone-label">Eastern Time</p>
+          </div>
+          <span class="day-status" aria-label="Day or night"></span>
+        </div>
+        <time class="time" datetime="">--:--:--</time>
+        <p class="date">Loading date…</p>
+        <p class="offset">UTC—</p>
+      </article>
+
+      <article class="clock-card" data-time-zone="Europe/London" data-city="London">
+        <div class="card-heading">
+          <div>
+            <h2>London</h2>
+            <p class="zone-label">Greenwich Mean Time</p>
+          </div>
+          <span class="day-status" aria-label="Day or night"></span>
+        </div>
+        <time class="time" datetime="">--:--:--</time>
+        <p class="date">Loading date…</p>
+        <p class="offset">UTC—</p>
+      </article>
+
+      <article class="clock-card" data-time-zone="Europe/Madrid" data-city="Madrid">
+        <div class="card-heading">
+          <div>
+            <h2>Madrid</h2>
+            <p class="zone-label">Central European Time</p>
+          </div>
+          <span class="day-status" aria-label="Day or night"></span>
+        </div>
+        <time class="time" datetime="">--:--:--</time>
+        <p class="date">Loading date…</p>
+        <p class="offset">UTC—</p>
+      </article>
+
+      <article class="clock-card" data-time-zone="Asia/Tokyo" data-city="Tokyo">
+        <div class="card-heading">
+          <div>
+            <h2>Tokyo</h2>
+            <p class="zone-label">Japan Standard Time</p>
+          </div>
+          <span class="day-status" aria-label="Day or night"></span>
+        </div>
+        <time class="time" datetime="">--:--:--</time>
+        <p class="date">Loading date…</p>
+        <p class="offset">UTC—</p>
+      </article>
+
+      <article class="clock-card" data-time-zone="Australia/Sydney" data-city="Sydney">
+        <div class="card-heading">
+          <div>
+            <h2>Sydney</h2>
+            <p class="zone-label">Australian Eastern Time</p>
+          </div>
+          <span class="day-status" aria-label="Day or night"></span>
+        </div>
+        <time class="time" datetime="">--:--:--</time>
+        <p class="date">Loading date…</p>
+        <p class="offset">UTC—</p>
+      </article>
+
+      <article class="clock-card" data-time-zone="Pacific/Honolulu" data-city="Honolulu">
+        <div class="card-heading">
+          <div>
+            <h2>Honolulu</h2>
+            <p class="zone-label">Hawaii-Aleutian Time</p>
+          </div>
+          <span class="day-status" aria-label="Day or night"></span>
+        </div>
+        <time class="time" datetime="">--:--:--</time>
+        <p class="date">Loading date…</p>
+        <p class="offset">UTC—</p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span>Updates every second</span>
+      <span class="local-time">Your local time: <strong id="local-time">--:--:--</strong></span>
+    </footer>
+  </main>
+</body>
+</html>
