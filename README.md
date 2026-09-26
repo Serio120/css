@@ -1,4 +1,4 @@
-# CSS Magic
+# CSS Magic.
 
 Colección de experimentos, ejemplos y apuntes sobre HTML y CSS. El repositorio sirve como laboratorio personal para probar formas, animaciones, imágenes, layouts y componentes visuales que puedan reutilizarse en otros proyectos.
 
