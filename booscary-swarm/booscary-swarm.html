@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🎃 Halloween BooScary Swarm</title>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    height: 100vh;
+    background: radial-gradient(#1a0a12, #050308);
+    overflow: hidden;
+    font-family: system-ui, sans-serif;
+    color: #eee;
+  }
+
+  header {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+    pointer-events: none;
+    text-shadow: 0 0 20px #ff4400;
+  }
+  header h1 {
+    font-family: 'Creepster', cursive;
+    font-size: 3.2rem;
+    color: #ff6a00;
+    letter-spacing: 2px;
+  }
+  header p {
+    font-family: 'Nosifer', cursive;
+    font-size: 1.1rem;
+    color: #ffcc66;
+    margin-top: 6px;
+    opacity: 0.9;
+  }
+
+  .sound-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 20;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid #ff6a00;
+    color: #ffcc66;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Nosifer', cursive;
+    font-size: 0.9rem;
+  }
+  .sound-btn:hover { background: rgba(255,100,0,0.3); }
+
+  .legend {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.65);
+    border: 1px solid #ff6a00;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    z-index: 10;
+    display: flex;
+    gap: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .legend .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.boo { background: #bb88ff; }
+  .dot.scary { background: #ff6666; }
+  .dot.booscary { background: #ff33aa; }
+
+  .swarm { position: absolute; inset: 0; }
+
+  .mosquito {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #ffcc66;
+    text-shadow: 0 0 10px #ff6600;
+    cursor: pointer;
+    user-select: none;
+    z-index: 1;
+  }
+
+  .mosquito::before {
+    content: attr(data-num);
+    position: relative;
+    z-index: 2;
+  }
+
+  .mosquito::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+    filter: drop-shadow(0 0 12px rgba(255, 80, 0, 0.7));
+  }
+
+  @keyframes swarm {
+    0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+    20%  { transform: translate(var(--tx1), var(--ty1)) rotate(var(--r1)) scale(1.06); }
+    40%  { transform: translate(var(--tx2), var(--ty2)) rotate(var(--r2)) scale(0.94); }
+    60%  { transform: translate(var(--tx3), var(--ty3)) rotate(var(--r3)) scale(1.1); }
+    80%  { transform: translate(var(--tx4), var(--ty4)) rotate(var(--r4)) scale(0.97); }
+    100% { transform: translate(var(--tx5), var(--ty5)) rotate(var(--r5)) scale(1); }
+  }
+
+  .mosquito:hover { z-index: 100; }
+
+  .mosquito:hover::before {
+    content: attr(data-text);
+    font-size: 0.85rem;
+    color: #fff;
+    text-shadow: 0 0 8px #000, 0 0 15px currentColor;
+    background: rgba(0,0,0,0.7);
+    padding: 6px 10px;
+    border-radius: 8px;
+    z-index: 3;
+  }
+
+  .mosquito:hover::after { opacity: 1; }
+
+  .mosquito[data-type="boo"]::after {
+    background-image: url("https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=200&h=200&fit=crop&q=80");
+  }
+  .mosquito[data-type="scary"]::after {
+    background-image: url("https://images.unsplash.com/photo-1509557965875-b88c97052f0e?w=200&h=200&fit=crop&q=80");
+  }
+  .mosquito[data-type="booscary"]::after {
+    background-image: url("https://images.unsplash.com/photo-1505635552518-3448ff116af3?w=200&h=200&fit=crop&q=80");
+    filter: saturate(1.4) drop-shadow(0 0 15px #ff00aa);
+  }
+
+  .mosquito[data-type="boo"]:hover::before { color: #ddbbff; }
+  .mosquito[data-type="scary"]:hover::before { color: #ff8888; }
+  .mosquito[data-type="booscary"]:hover::before { color: #ff55cc; }
+</style>
+</head>
+<body>
+
+  <!-- Background sound (replace the src with any free Halloween ambience MP3 if this one fails) -->
+  <audio id="bgSound" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d1718ab41b.mp3?filename=halloween-horror-background-music-110568.mp3" type="audio/mpeg">
+  </audio>
+  <button class="sound-btn" id="soundBtn">🔇 Sound Off</button>
+
+  <header>
+    <h1>🎃 BooScary Swarm</h1>
+    <p>Hover over the floating numbers...</p>
+  </header>
+
+  <div class="swarm" id="swarm"></div>
+
+  <div class="legend">
+    <span><i class="dot boo"></i> Boo (multiples of 3)</span>
+    <span><i class="dot scary"></i> Scary (multiples of 5)</span>
+    <span><i class="dot booscary"></i> BooScary (multiples of 15)</span>
+  </div>
+
+  <script>
+    const swarm = document.getElementById('swarm');
+    const total = 100;
+    const bgSound = document.getElementById('bgSound');
+    const soundBtn = document.getElementById('soundBtn');
+    let soundOn = false;
+
+    soundBtn.addEventListener('click', () => {
+      if (soundOn) {
+        bgSound.pause();
+        soundBtn.textContent = '🔇 Sound Off';
+      } else {
+        bgSound.play().catch(() => {
+          alert('Click the button again to enable sound (browser autoplay policy)');
+        });
+        soundBtn.textContent = '🔊 Sound On';
+      }
+      soundOn = !soundOn;
+    });
+
+    function getType(n) {
+      if (n % 15 === 0) return { type: 'booscary', text: 'BooScary' };
+      if (n % 5 === 0) return { type: 'scary', text: 'Scary' };
+      if (n % 3 === 0) return { type: 'boo', text: 'Boo' };
+      return { type: 'number', text: String(n) };
+    }
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    for (let i = 1; i <= total; i++) {
+      const el = document.createElement('div');
+      el.className = 'mosquito';
+
+      const info = getType(i);
+      el.dataset.num = i;
+      el.dataset.text = info.text;
+      el.dataset.type = info.type;
+
+      el.style.left = random(5, 90) + '%';
+      el.style.top = random(8, 82) + '%';
+
+      el.style.setProperty('--tx1', random(-70, 70) + 'px');
+      el.style.setProperty('--ty1', random(-80, 80) + 'px');
+      el.style.setProperty('--r1', random(-25, 25) + 'deg');
+
+      el.style.setProperty('--tx2', random(-55, 85) + 'px');
+      el.style.setProperty('--ty2', random(-65, 60) + 'px');
+      el.style.setProperty('--r2', random(-30, 30) + 'deg');
+
+      el.style.setProperty('--tx3', random(-80, 45) + 'px');
+      el.style.setProperty('--ty3', random(-45, 85) + 'px');
+      el.style.setProperty('--r3', random(-20, 20) + 'deg');
+
+      el.style.setProperty('--tx4', random(-50, 70) + 'px');
+      el.style.setProperty('--ty4', random(-60, 60) + 'px');
+      el.style.setProperty('--r4', random(-28, 28) + 'deg');
+
+      el.style.setProperty('--tx5', random(-40, 40) + 'px');
+      el.style.setProperty('--ty5', random(-50, 50) + 'px');
+      el.style.setProperty('--r5', random(-15, 15) + 'deg');
+
+      const duration = random(4, 10);
+      const delay = random(-8, 0);
+      el.style.animation = `swarm ${duration}s ease-in-out ${delay}s infinite alternate`;
+
+      swarm.appendChild(el);
+    }
+  </script>
+</body>
+</html>
