@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Cursed Number</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Manrope:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --obsidian-black: #08090B;
+      --midnight-forest: #101B18;
+      --haunted-teal: #173D38;
+      --toxic-green: #A5D66F;
+      --ghostly-ivory: #E8E3D5;
+      --burnt-orange: #C66B35;
+      --blood-burgundy: #521D29;
+      --muted-moonlight: #AEB9B4;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: linear-gradient(135deg, var(--obsidian-black) 0%, var(--midnight-forest) 50%, var(--obsidian-black) 100%);
+      color: var(--ghostly-ivory);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ===== FOREST BACKGROUND LAYERS ===== */
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+      background: radial-gradient(ellipse at 50% 30%, rgba(174, 185, 180, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Moon */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 10%;
+      right: 15%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at 35% 35%, rgba(174, 185, 180, 0.9), rgba(174, 185, 180, 0.3) 50%, transparent 70%);
+      border-radius: 50%;
+      z-index: -8;
+      box-shadow: inset -20px -20px 60px rgba(8, 9, 11, 0.8);
+      animation: moonPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes moonPulse {
+      0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      @keyframes moonPulse {
+        0%, 100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    /* Forest fog base */
+    .forest-fog {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40%;
+      z-index: -7;
+      background: linear-gradient(to top, rgba(16, 27, 24, 0.8), rgba(16, 27, 24, 0.4), transparent);
+      pointer-events: none;
+      animation: fogDrift 8s ease-in-out infinite;
+    }
+
+    @keyframes fogDrift {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .forest-fog {
+        animation: none;
+      }
+    }
+
+    /* Misty ghosts */
+    .ghost {
+      position: fixed;
+      z-index: -5;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(232, 227, 213, 0.4);
+      text-shadow: 0 0 15px rgba(232, 227, 213, 0.2);
+      animation: ghostFloat 6s ease-in-out infinite;
+      filter: blur(0.5px) drop-shadow(0 0 10px rgba(232, 227, 213, 0.15));
+    }
+
+    .ghost-shape {
+      position: relative;
+      width: 60px;
+      height: 80px;
+      background: radial-gradient(ellipse at 40% 30%, rgba(232, 227, 213, 0.25), rgba(232, 227, 213, 0.08));
+      border-radius: 50% 50% 40% 40%;
+      margin-bottom: 10px;
+      box-shadow: 
+        inset -10px -10px 20px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(232, 227, 213, 0.1);
+    }
+
+    .ghost-text {
+      font-size: 1.5rem;
+      opacity: 0.5;
+      animation: ghostWhisper 3s ease-in-out infinite;
+    }
+
+    @keyframes ghostFloat {
+      0%, 100% {
+        transform: translateY(0px) translateX(0px);
+        opacity: 0.2;
+      }
+      25% {
+        transform: translateY(-30px) translateX(15px);
+        opacity: 0.35;
+      }
+      50% {
+        transform: translateY(-50px) translateX(-10px);
+        opacity: 0.25;
+      }
+      75% {
+        transform: translateY(-30px) translateX(20px);
+        opacity: 0.3;
+      }
+    }
+
+    @keyframes ghostWhisper {
+      0%, 100% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ghost {
+        animation: none;
+        opacity: 0.15;
+      }
+      .ghost-text {
+        animation: none;
+      }
+    }
+
+    /* Tree silhouettes */
+    .tree {
+      position: fixed;
+      z-index: -6;
+      pointer-events: none;
+      filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
+    }
+
+    .tree-1 {
+      bottom: 5%;
+      left: 5%;
+      width: 180px;
+      height: 280px;
+    }
+
+    .tree-2 {
+      bottom: 8%;
+      right: 8%;
+      width: 200px;
+      height: 320px;
+    }
+
+    .tree-3 {
+      bottom: 10%;
+      left: 40%;
+      width: 120px;
+      height: 200px;
+      opacity: 0.5;
+    }
+
+    .tree-4 {
+      bottom: 12%;
+      right: 35%;
+      width: 140px;
+      height: 220px;
+      opacity: 0.4;
+    }
+
+    /* Tree SVG-like shapes using pure CSS */
+    .tree-trunk {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8%;
+      height: 25%;
+      background: linear-gradient(to right, rgba(8, 9, 11, 0.7), rgba(16, 27, 24, 0.5));
+    }
+
+    .tree-canopy {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 80%;
+      clip-path: polygon(
+        20% 100%, 15% 75%, 10% 50%, 5% 25%, 8% 10%, 25% 5%, 40% 0%, 50% 8%, 60% 0%, 75% 5%, 92% 10%, 95% 25%, 90% 50%, 85% 75%, 80% 100%
+      );
+      background: linear-gradient(135deg, rgba(8, 9, 11, 0.9), rgba(16, 27, 24, 0.7));
+      opacity: 0.8;
+    }
+
+    .tree-branches {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.4;
+    }
+
+    .branch {
+      position: absolute;
+      background: rgba(16, 27, 24, 0.6);
+    }
+
+    /* Distant arch */
+    .distant-arch {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 200px;
+      z-index: -5;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .arch-stone {
+      position: absolute;
+      border: 2px solid rgba(174, 185, 180, 0.3);
+      border-bottom: none;
+      border-radius: 50% 50% 0 0;
+    }
+
+    .arch-left {
+      left: 0;
+      top: 50%;
+      width: 40%;
+      height: 50%;
+    }
+
+    .arch-right {
+      right: 0;
+      top: 50%;
+      width: 40%;
+      height: 50%;
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+    }
+
+    /* ===== HEADER ===== */
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      letter-spacing: 3px;
+      color: var(--muted-moonlight);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 10px;
+      color: var(--ghostly-ivory);
+      text-shadow: 0 0 30px rgba(165, 214, 111, 0.1);
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+      letter-spacing: 2px;
+      color: var(--muted-moonlight);
+      text-transform: uppercase;
+      opacity: 0.7;
+      font-weight: 600;
+    }
+
+    /* ===== CONSOLE MACHINE ===== */
+
+    .console {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      padding: 50px 40px;
+      background: linear-gradient(135deg, var(--midnight-forest) 0%, var(--haunted-teal) 50%, var(--midnight-forest) 100%);
+      border: 2px solid rgba(165, 214, 111, 0.1);
+      border-radius: 12px;
+      box-shadow: 
+        0 0 60px rgba(165, 214, 111, 0.05),
+        inset 0 0 40px rgba(165, 214, 111, 0.02),
+        0 20px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .console::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(165, 214, 111, 0.03) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .console-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .console-label {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--muted-moonlight);
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    /* Display screen */
+    .display {
+      background: linear-gradient(135deg, rgba(8, 9, 11, 0.95) 0%, rgba(16, 27, 24, 0.95) 100%);
+      border: 1px solid rgba(165, 214, 111, 0.15);
+      border-radius: 8px;
+      padding: 40px 30px;
+      text-align: center;
+      margin-bottom: 40px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(165, 214, 111, 0.05), transparent);
+      pointer-events: none;
+    }
+
+    .display-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .display-result {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 12px;
+      color: var(--ghostly-ivory);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .display-message {
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      color: var(--muted-moonlight);
+      text-transform: uppercase;
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    /* Input section */
+    .input-section {
+      margin-bottom: 30px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      color: var(--muted-moonlight);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    input[type='number'] {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 1rem;
+      background: linear-gradient(to right, rgba(16, 27, 24, 0.8), rgba(23, 61, 56, 0.8));
+      color: var(--ghostly-ivory);
+      border: 1px solid rgba(165, 214, 111, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(165, 214, 111, 0);
+    }
+
+    input[type='number']:focus {
+      outline: none;
+      border-color: rgba(165, 214, 111, 0.5);
+      box-shadow: 0 0 20px rgba(165, 214, 111, 0.15);
+      background: linear-gradient(to right, rgba(16, 27, 24, 0.9), rgba(23, 61, 56, 0.9));
+    }
+
+    input[type='number']::placeholder {
+      color: rgba(174, 185, 180, 0.4);
+    }
+
+    /* Remove number input arrows */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type='number'][type='number'] {
+      -moz-appearance: textfield;
+    }
+
+    /* Primary button */
+    .btn-reveal {
+      width: 100%;
+      padding: 16px 24px;
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, rgba(165, 214, 111, 0.15) 0%, rgba(165, 214, 111, 0.05) 100%);
+      color: var(--toxic-green);
+      border: 2px solid rgba(165, 214, 111, 0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 30px rgba(165, 214, 111, 0);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-reveal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(165, 214, 111, 0.1);
+      transition: left 0.3s ease;
+      z-index: 0;
+    }
+
+    .btn-reveal:hover {
+      border-color: rgba(165, 214, 111, 0.6);
+      box-shadow: 0 0 40px rgba(165, 214, 111, 0.2);
+      background: linear-gradient(135deg, rgba(165, 214, 111, 0.25) 0%, rgba(165, 214, 111, 0.1) 100%);
+    }
+
+    .btn-reveal:hover::before {
+      left: 100%;
+    }
+
+    .btn-reveal:active {
+      transform: scale(0.98);
+    }
+
+    button {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Quick test controls */
+    .quick-tests {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .quick-test {
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      background: rgba(165, 214, 111, 0.05);
+      color: var(--muted-moonlight);
+      border: 1px solid rgba(165, 214, 111, 0.15);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+
+    .quick-test:hover {
+      background: rgba(165, 214, 111, 0.1);
+      border-color: rgba(165, 214, 111, 0.3);
+      color: var(--ghostly-ivory);
+    }
+
+    .quick-test:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 480px) {
+      .quick-tests {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-top: 20px;
+      }
+
+      .quick-test {
+        padding: 8px 6px;
+        font-size: 0.65rem;
+      }
+    }
+
+    /* ===== RESULT STATES ===== */
+
+    .display-result.boo {
+      color: var(--toxic-green);
+      text-shadow: 0 0 20px rgba(165, 214, 111, 0.4);
+      animation: boo-reveal 0.5s ease-out;
+    }
+
+    .display-result.scary {
+      color: var(--burnt-orange);
+      text-shadow: 0 0 20px rgba(198, 107, 53, 0.4);
+      animation: scary-reveal 0.5s ease-out;
+    }
+
+    .display-result.booscary {
+      background: linear-gradient(90deg, var(--toxic-green), var(--burnt-orange), var(--toxic-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      animation: booscary-reveal 0.6s ease-out;
+    }
+
+    .display-result.normal {
+      color: var(--ghostly-ivory);
+      text-shadow: 0 0 10px rgba(174, 185, 180, 0.2);
+      animation: normal-reveal 0.4s ease-out;
+    }
+
+    @keyframes boo-reveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes scary-reveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) rotate(-2deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @keyframes booscary-reveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes normal-reveal {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Console reaction backgrounds */
+    .console.reaction-boo {
+      background: linear-gradient(135deg, var(--midnight-forest) 0%, rgba(165, 214, 111, 0.1) 50%, var(--midnight-forest) 100%);
+      box-shadow: 
+        0 0 80px rgba(165, 214, 111, 0.15),
+        inset 0 0 60px rgba(165, 214, 111, 0.05),
+        0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .console.reaction-scary {
+      background: linear-gradient(135deg, var(--midnight-forest) 0%, rgba(198, 107, 53, 0.08) 50%, var(--midnight-forest) 100%);
+      box-shadow: 
+        0 0 80px rgba(198, 107, 53, 0.1),
+        inset 0 0 60px rgba(198, 107, 53, 0.03),
+        0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .console.reaction-booscary {
+      background: linear-gradient(135deg, rgba(165, 214, 111, 0.05) 0%, rgba(198, 107, 53, 0.08) 50%, rgba(165, 214, 111, 0.05) 100%);
+      box-shadow: 
+        0 0 100px rgba(165, 214, 111, 0.2),
+        0 0 80px rgba(198, 107, 53, 0.15),
+        inset 0 0 80px rgba(165, 214, 111, 0.08),
+        0 20px 40px rgba(0, 0, 0, 0.5);
+      animation: booscary-pulse 0.4s ease-out;
+    }
+
+    @keyframes booscary-pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      @keyframes booscary-pulse {
+        0%, 100% {
+          transform: scale(1);
+        }
+      }
+    }
+
+    /* ===== GRIMOIRE (HISTORY) ===== */
+
+    .grimoire {
+      width: 100%;
+      max-width: 500px;
+      margin-top: 40px;
+    }
+
+    .grimoire-title {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--muted-moonlight);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    .grimoire-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .grimoire-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .grimoire-list::-webkit-scrollbar-track {
+      background: rgba(165, 214, 111, 0.05);
+      border-radius: 3px;
+    }
+
+    .grimoire-list::-webkit-scrollbar-thumb {
+      background: rgba(165, 214, 111, 0.2);
+      border-radius: 3px;
+    }
+
+    .grimoire-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(165, 214, 111, 0.3);
+    }
+
+    .grimoire-entry {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      background: rgba(165, 214, 111, 0.03);
+      border-left: 2px solid rgba(165, 214, 111, 0.2);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      animation: entry-rise 0.4s ease-out;
+    }
+
+    @keyframes entry-rise {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .grimoire-entry {
+        animation: none;
+      }
+    }
+
+    .entry-index {
+      color: var(--muted-moonlight);
+      opacity: 0.6;
+      min-width: 30px;
+    }
+
+    .entry-number {
+      color: var(--ghostly-ivory);
+      text-align: right;
+      min-width: 40px;
+    }
+
+    .entry-result {
+      text-align: right;
+      font-weight: 700;
+      letter-spacing: 1px;
+      min-width: 80px;
+    }
+
+    .entry-result.boo {
+      color: var(--toxic-green);
+    }
+
+    .entry-result.scary {
+      color: var(--burnt-orange);
+    }
+
+    .entry-result.booscary {
+      background: linear-gradient(90deg, var(--toxic-green), var(--burnt-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .entry-result.normal {
+      color: var(--muted-moonlight);
+    }
+
+    .grimoire-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .btn-clear {
+      padding: 10px 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(82, 29, 41, 0.2);
+      color: var(--muted-moonlight);
+      border: 1px solid rgba(82, 29, 41, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear:hover {
+      background: rgba(82, 29, 41, 0.3);
+      border-color: rgba(82, 29, 41, 0.5);
+      color: var(--ghostly-ivory);
+    }
+
+    .btn-clear:active {
+      transform: scale(0.95);
+    }
+
+    /* ===== FOOTER ===== */
+
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 80px;
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--muted-moonlight);
+      opacity: 0.5;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ===== PARTICLE CONTAINER ===== */
+
+    .particle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      will-change: transform, opacity;
+    }
+
+    /* ===== RESPONSIVE ===== */
+
+    @media (max-width: 768px) {
+      main {
+        padding: 30px 15px;
+        gap: 40px;
+      }
+
+      .console {
+        padding: 40px 25px;
+        max-width: none;
+      }
+
+      .tree {
+        opacity: 0.3;
+      }
+
+      .display {
+        min-height: 100px;
+        padding: 30px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 20px 12px;
+        gap: 30px;
+      }
+
+      .console {
+        padding: 30px 20px;
+        border-radius: 8px;
+      }
+
+      .title {
+        font-size: 2rem;
+      }
+
+      .display {
+        min-height: 90px;
+        padding: 25px 15px;
+        margin-bottom: 25px;
+      }
+
+      .display-result {
+        font-size: 2rem;
+        min-height: 50px;
+      }
+
+      .display-message {
+        font-size: 0.7rem;
+      }
+
+      .console-label {
+        margin-bottom: 20px;
+      }
+
+      .grimoire {
+        max-width: none;
+        margin-top: 30px;
+      }
+
+      footer {
+        margin-top: 50px;
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particle container for JS-driven effects -->
+  <div class="particle-container" id="particleContainer"></div>
+
+  <!-- Forest background layers -->
+  <div class="forest-fog"></div>
+
+  <!-- Trees -->
+  <div class="tree tree-1">
+    <div class="tree-trunk"></div>
+    <div class="tree-canopy"></div>
+    <div class="tree-branches"></div>
+  </div>
+
+  <div class="tree tree-2">
+    <div class="tree-trunk"></div>
+    <div class="tree-canopy"></div>
+    <div class="tree-branches"></div>
+  </div>
+
+  <div class="tree tree-3">
+    <div class="tree-trunk"></div>
+    <div class="tree-canopy"></div>
+  </div>
+
+  <div class="tree tree-4">
+    <div class="tree-trunk"></div>
+    <div class="tree-canopy"></div>
+  </div>
+
+  <!-- Distant arch -->
+  <div class="distant-arch">
+    <div class="arch-stone arch-left"></div>
+    <div class="arch-stone arch-right"></div>
+  </div>
+
+  <!-- Misty ghosts -->
+  <div class="ghost" style="top: 15%; left: 8%; animation-delay: 0s;">
+    <div class="ghost-shape"></div>
+    <div class="ghost-text">boo</div>
+  </div>
+
+  <div class="ghost" style="top: 25%; right: 10%; animation-delay: 1.2s;">
+    <div class="ghost-shape"></div>
+    <div class="ghost-text">boo</div>
+  </div>
+
+  <div class="ghost" style="top: 20%; left: 50%; animation-delay: 2.4s; opacity: 0.15;">
+    <div class="ghost-shape"></div>
+    <div class="ghost-text">boo</div>
+  </div>
+
+  <div class="ghost" style="top: 30%; right: 25%; animation-delay: 0.8s; opacity: 0.12;">
+    <div class="ghost-shape"></div>
+    <div class="ghost-text">boo</div>
+  </div>
+
+  <div class="ghost" style="top: 18%; left: 70%; animation-delay: 1.6s;">
+    <div class="ghost-shape"></div>
+    <div class="ghost-text">boo</div>
+  </div>
+
+  <!-- Main content -->
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="eyebrow">Halloween CodePen Challenge 2026</div>
+      <h1 class="title">The Cursed Number</h1>
+      <p class="subtitle">A FizzBuzz Experiment</p>
+    </header>
+
+    <!-- Console machine -->
+    <section class="console" id="console">
+      <div class="console-content">
+        <div class="console-label">The Ritual Console</div>
+
+        <!-- Display -->
+        <div class="display">
+          <div class="display-content">
+            <div class="display-result" id="displayResult">The forest is listening...</div>
+            <div class="display-message" id="displayMessage"></div>
+          </div>
+        </div>
+
+        <!-- Input section -->
+        <div class="input-section">
+          <div class="input-wrapper">
+            <label for="numberInput">Enter a number...</label>
+            <input
+              type="number"
+              id="numberInput"
+              placeholder="ENTER A NUMBER..."
+              aria-label="Enter a positive integer"
+              aria-live="polite"
+            />
+          </div>
+
+          <button class="btn-reveal" id="revealButton">Reveal The Curse</button>
+
+          <!-- Quick tests -->
+          <div class="quick-tests">
+            <button class="quick-test" data-number="3">3 · BOO</button>
+            <button class="quick-test" data-number="5">5 · SCARY</button>
+            <button class="quick-test" data-number="15">15 · BOOSCARY</button>
+            <button class="quick-test" data-number="31">31 · NORMAL</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grimoire (history) -->
+    <section class="grimoire">
+      <h2 class="grimoire-title">The Grimoire</h2>
+      <div class="grimoire-list" id="grimoireList"></div>
+      <div class="grimoire-controls">
+        <button class="btn-clear" id="clearButton">Clear Grimoire</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    ☽ The numbers never lie. The forest never forgets. ☽
+  </footer>
+
+  <script>
+    /* ===== CORE LOGIC ===== */
+
+    /**
+     * ScaryFizzBuzz - The Challenge Implementation
+     */
+    function ScaryFizzBuzz(number) {
+      // Validate: must be a positive integer
+      if (typeof number !== 'number') {
+        throw new RangeError('THE SPELL REQUIRES A POSITIVE INTEGER.');
+      }
+
+      if (!Number.isInteger(number)) {
+        throw new RangeError('THE SPELL REQUIRES A POSITIVE INTEGER.');
+      }
+
+      if (number <= 0) {
+        throw new RangeError('THE SPELL REQUIRES A POSITIVE INTEGER.');
+      }
+
+      // Check divisibility by 15 first (both 3 and 5)
+      if (number % 15 === 0) {
+        return 'BooScary';
+      }
+
+      // Check divisibility by 3
+      if (number % 3 === 0) {
+        return 'Boo';
+      }
+
+      // Check divisibility by 5
+      if (number % 5 === 0) {
+        return 'Scary';
+      }
+
+      // Otherwise, return the number as a string
+      return String(number);
+    }
+
+    /* ===== DOM REFERENCES ===== */
+
+    const numberInput = document.getElementById('numberInput');
+    const revealButton = document.getElementById('revealButton');
+    const displayResult = document.getElementById('displayResult');
+    const displayMessage = document.getElementById('displayMessage');
+    const console_ = document.getElementById('console');
+    const grimoireList = document.getElementById('grimoireList');
+    const clearButton = document.getElementById('clearButton');
+    const quickTestButtons = document.querySelectorAll('.quick-test');
+    const particleContainer = document.getElementById('particleContainer');
+
+    /* ===== STATE ===== */
+
+    let history = [];
+    const MAX_HISTORY = 8;
+
+    /* ===== PARTICLE SYSTEM (JS-DRIVEN) ===== */
+
+    class Particle {
+      constructor(x, y, type = 'ember') {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+        this.vx = (Math.random() - 0.5) * 3;
+        this.vy = (Math.random() - 0.5) * 2 - 1.5;
+        this.life = 1;
+        this.maxLife = type === 'ember' ? 1.5 : 2;
+        this.size = type === 'ember' ? 4 + Math.random() * 6 : 2 + Math.random() * 4;
+
+        this.element = document.createElement('div');
+        this.element.className = 'particle';
+        this.element.style.cssText = `
+          left: ${this.x}px;
+          top: ${this.y}px;
+          width: ${this.size}px;
+          height: ${this.size}px;
+          border-radius: 50%;
+          background: ${type === 'ember' ? '#C66B35' : '#A5D66F'};
+          box-shadow: 0 0 ${this.size}px ${type === 'ember' ? '#C66B35' : '#A5D66F'};
+          opacity: ${this.life};
+          pointer-events: none;
+        `;
+        particleContainer.appendChild(this.element);
+      }
+
+      update(deltaTime = 0.016) {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy -= 0.1; // Gravity
+        this.life -= deltaTime / this.maxLife;
+
+        if (this.life <= 0) {
+          this.element.remove();
+          return false;
+        }
+
+        const opacity = Math.max(0, this.life);
+        this.element.style.cssText = `
+          left: ${this.x}px;
+          top: ${this.y}px;
+          width: ${this.size}px;
+          height: ${this.size}px;
+          border-radius: 50%;
+          background: ${this.type === 'ember' ? '#C66B35' : '#A5D66F'};
+          box-shadow: 0 0 ${this.size}px ${this.type === 'ember' ? '#C66B35' : '#A5D66F'};
+          opacity: ${opacity};
+          pointer-events: none;
+        `;
+
+        return true;
+      }
+    }
+
+    const particles = [];
+
+    function spawnParticles(count, type, x, y) {
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 40, type));
+      }
+    }
+
+    function animateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        if (!particles[i].update()) {
+          particles.splice(i, 1);
+        }
+      }
+      if (particles.length > 0) {
+        requestAnimationFrame(animateParticles);
+      }
+    }
+
+    /* ===== DISPLAY LOGIC ===== */
+
+    function getResultCategory(result) {
+      if (result === 'Boo') return 'boo';
+      if (result === 'Scary') return 'scary';
+      if (result === 'BooScary') return 'booscary';
+      return 'normal';
+    }
+
+    function getResultMessage(result) {
+      const messages = {
+        boo: 'Something has awakened in the darkness.',
+        scary: 'Something is watching you from the trees.',
+        booscary: 'The ancient curse has been unleashed.',
+        normal: 'The ancient symbols remain silent.'
+      };
+      return messages[getResultCategory(result)];
+    }
+
+    function clearConsoleReactions() {
+      console_.classList.remove('reaction-boo', 'reaction-scary', 'reaction-booscary');
+    }
+
+    function showResult(number, result) {
+      const category = getResultCategory(result);
+
+      // Clear previous animations by removing classes
+      displayResult.className = 'display-result';
+
+      // Trigger reflow to restart animations
+      void displayResult.offsetWidth;
+
+      // Apply new animation
+      displayResult.classList.add(category);
+      displayResult.textContent = result;
+
+      const message = getResultMessage(result);
+      displayMessage.textContent = message;
+
+      // Console reaction
+      clearConsoleReactions();
+      if (category !== 'normal') {
+        console_.classList.add(`reaction-${category}`);
+      }
+
+      // Particle effects
+      const consoleRect = console_.getBoundingClientRect();
+      const centerX = consoleRect.left + consoleRect.width / 2;
+      const centerY = consoleRect.top + consoleRect.height / 2;
+
+      if (category === 'boo') {
+        spawnParticles(8, 'green', centerX, centerY);
+      } else if (category === 'scary') {
+        spawnParticles(8, 'ember', centerX, centerY);
+      } else if (category === 'booscary') {
+        spawnParticles(6, 'green', centerX, centerY);
+        spawnParticles(6, 'ember', centerX, centerY);
+      } else {
+        spawnParticles(4, 'green', centerX, centerY);
+      }
+
+      animateParticles();
+    }
+
+    /* ===== HISTORY (GRIMOIRE) ===== */
+
+    function addHistoryEntry(number, result) {
+      const category = getResultCategory(result);
+
+      // Prevent duplicates on same number
+      if (history.length > 0 && history[0].number === number && history[0].result === result) {
+        return;
+      }
+
+      history.unshift({ number, result, category });
+
+      if (history.length > MAX_HISTORY) {
+        history.pop();
+      }
+
+      renderHistory();
+    }
+
+    function renderHistory() {
+      grimoireList.innerHTML = '';
+
+      history.forEach((entry, index) => {
+        const entryEl = document.createElement('div');
+        entryEl.className = 'grimoire-entry';
+
+        const indexEl = document.createElement('div');
+        indexEl.className = 'entry-index';
+        indexEl.textContent = String(index + 1).padStart(3, '0');
+
+        const numberEl = document.createElement('div');
+        numberEl.className = 'entry-number';
+        numberEl.textContent = entry.number;
+
+        const resultEl = document.createElement('div');
+        resultEl.className = `entry-result ${entry.category}`;
+        resultEl.textContent = entry.result;
+
+        entryEl.appendChild(indexEl);
+        entryEl.appendChild(numberEl);
+        entryEl.appendChild(resultEl);
+
+        grimoireList.appendChild(entryEl);
+      });
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+    }
+
+    /* ===== EVENT HANDLERS ===== */
+
+    function handleTest() {
+      const inputValue = numberInput.value.trim();
+
+      if (!inputValue) {
+        displayResult.className = 'display-result';
+        displayResult.textContent = 'Enter a number...';
+        displayMessage.textContent = '';
+        return;
+      }
+
+      const number = Number(inputValue);
+
+      try {
+        const result = ScaryFizzBuzz(number);
+        showResult(number, result);
+        addHistoryEntry(number, result);
+        numberInput.value = '';
+        numberInput.focus();
+      } catch (error) {
+        displayResult.className = 'display-result';
+        displayResult.textContent = 'The spell requires a positive integer.';
+        displayMessage.textContent = '';
+      }
+    }
+
+    function handleQuickTest(event) {
+      const number = parseInt(event.target.dataset.number, 10);
+      numberInput.value = number;
+      handleTest();
+    }
+
+    revealButton.addEventListener('click', handleTest);
+    numberInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        handleTest();
+      }
+    });
+
+    quickTestButtons.forEach((btn) => {
+      btn.addEventListener('click', handleQuickTest);
+    });
+
+    clearButton.addEventListener('click', clearHistory);
+
+    // Remove console reactions after animation
+    console_.addEventListener('animationend', () => {
+      setTimeout(clearConsoleReactions, 200);
+    });
+
+    // Focus on input on page load
+    window.addEventListener('load', () => {
+      numberInput.focus();
+    });
+  </script>
+</body>
+</html>
