@@ -1,1410 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Cursed Number</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Manrope:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --obsidian-black: #08090B;
-      --midnight-forest: #101B18;
-      --haunted-teal: #173D38;
-      --toxic-green: #A5D66F;
-      --ghostly-ivory: #E8E3D5;
-      --burnt-orange: #C66B35;
-      --blood-burgundy: #521D29;
-      --muted-moonlight: #AEB9B4;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Manrope', sans-serif;
-      background: linear-gradient(135deg, var(--obsidian-black) 0%, var(--midnight-forest) 50%, var(--obsidian-black) 100%);
-      color: var(--ghostly-ivory);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* ===== FOREST BACKGROUND LAYERS ===== */
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -10;
-      background: radial-gradient(ellipse at 50% 30%, rgba(174, 185, 180, 0.08) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    /* Moon */
-    body::after {
-      content: '';
-      position: fixed;
-      top: 10%;
-      right: 15%;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle at 35% 35%, rgba(174, 185, 180, 0.9), rgba(174, 185, 180, 0.3) 50%, transparent 70%);
-      border-radius: 50%;
-      z-index: -8;
-      box-shadow: inset -20px -20px 60px rgba(8, 9, 11, 0.8);
-      animation: moonPulse 4s ease-in-out infinite;
-    }
-
-    @keyframes moonPulse {
-      0%, 100% {
-        opacity: 0.7;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.9;
-        transform: scale(1.02);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      @keyframes moonPulse {
-        0%, 100% {
-          opacity: 0.7;
-        }
-        50% {
-          opacity: 0.8;
-        }
-      }
-    }
-
-    /* Forest fog base */
-    .forest-fog {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 40%;
-      z-index: -7;
-      background: linear-gradient(to top, rgba(16, 27, 24, 0.8), rgba(16, 27, 24, 0.4), transparent);
-      pointer-events: none;
-      animation: fogDrift 8s ease-in-out infinite;
-    }
-
-    @keyframes fogDrift {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-20px);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .forest-fog {
-        animation: none;
-      }
-    }
-
-    /* Misty ghosts */
-    .ghost {
-      position: fixed;
-      z-index: -5;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: rgba(232, 227, 213, 0.4);
-      text-shadow: 0 0 15px rgba(232, 227, 213, 0.2);
-      animation: ghostFloat 6s ease-in-out infinite;
-      filter: blur(0.5px) drop-shadow(0 0 10px rgba(232, 227, 213, 0.15));
-    }
-
-    .ghost-shape {
-      position: relative;
-      width: 60px;
-      height: 80px;
-      background: radial-gradient(ellipse at 40% 30%, rgba(232, 227, 213, 0.25), rgba(232, 227, 213, 0.08));
-      border-radius: 50% 50% 40% 40%;
-      margin-bottom: 10px;
-      box-shadow: 
-        inset -10px -10px 20px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(232, 227, 213, 0.1);
-    }
-
-    .ghost-text {
-      font-size: 1.5rem;
-      opacity: 0.5;
-      animation: ghostWhisper 3s ease-in-out infinite;
-    }
-
-    @keyframes ghostFloat {
-      0%, 100% {
-        transform: translateY(0px) translateX(0px);
-        opacity: 0.2;
-      }
-      25% {
-        transform: translateY(-30px) translateX(15px);
-        opacity: 0.35;
-      }
-      50% {
-        transform: translateY(-50px) translateX(-10px);
-        opacity: 0.25;
-      }
-      75% {
-        transform: translateY(-30px) translateX(20px);
-        opacity: 0.3;
-      }
-    }
-
-    @keyframes ghostWhisper {
-      0%, 100% {
-        opacity: 0.3;
-      }
-      50% {
-        opacity: 0.6;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ghost {
-        animation: none;
-        opacity: 0.15;
-      }
-      .ghost-text {
-        animation: none;
-      }
-    }
-
-    /* Tree silhouettes */
-    .tree {
-      position: fixed;
-      z-index: -6;
-      pointer-events: none;
-      filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
-    }
-
-    .tree-1 {
-      bottom: 5%;
-      left: 5%;
-      width: 180px;
-      height: 280px;
-    }
-
-    .tree-2 {
-      bottom: 8%;
-      right: 8%;
-      width: 200px;
-      height: 320px;
-    }
-
-    .tree-3 {
-      bottom: 10%;
-      left: 40%;
-      width: 120px;
-      height: 200px;
-      opacity: 0.5;
-    }
-
-    .tree-4 {
-      bottom: 12%;
-      right: 35%;
-      width: 140px;
-      height: 220px;
-      opacity: 0.4;
-    }
-
-    /* Tree SVG-like shapes using pure CSS */
-    .tree-trunk {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8%;
-      height: 25%;
-      background: linear-gradient(to right, rgba(8, 9, 11, 0.7), rgba(16, 27, 24, 0.5));
-    }
-
-    .tree-canopy {
-      position: absolute;
-      bottom: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      height: 80%;
-      clip-path: polygon(
-        20% 100%, 15% 75%, 10% 50%, 5% 25%, 8% 10%, 25% 5%, 40% 0%, 50% 8%, 60% 0%, 75% 5%, 92% 10%, 95% 25%, 90% 50%, 85% 75%, 80% 100%
-      );
-      background: linear-gradient(135deg, rgba(8, 9, 11, 0.9), rgba(16, 27, 24, 0.7));
-      opacity: 0.8;
-    }
-
-    .tree-branches {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0.4;
-    }
-
-    .branch {
-      position: absolute;
-      background: rgba(16, 27, 24, 0.6);
-    }
-
-    /* Distant arch */
-    .distant-arch {
-      position: fixed;
-      top: 15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 300px;
-      height: 200px;
-      z-index: -5;
-      opacity: 0.15;
-      pointer-events: none;
-    }
-
-    .arch-stone {
-      position: absolute;
-      border: 2px solid rgba(174, 185, 180, 0.3);
-      border-bottom: none;
-      border-radius: 50% 50% 0 0;
-    }
-
-    .arch-left {
-      left: 0;
-      top: 50%;
-      width: 40%;
-      height: 50%;
-    }
-
-    .arch-right {
-      right: 0;
-      top: 50%;
-      width: 40%;
-      height: 50%;
-    }
-
-    /* ===== MAIN CONTAINER ===== */
-
-    main {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 900px;
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 60px;
-    }
-
-    /* ===== HEADER ===== */
-
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .eyebrow {
-      font-family: 'Manrope', sans-serif;
-      font-size: clamp(0.7rem, 2vw, 0.85rem);
-      letter-spacing: 3px;
-      color: var(--muted-moonlight);
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 20px;
-      opacity: 0.8;
-    }
-
-    .title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 8vw, 4.5rem);
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 10px;
-      color: var(--ghostly-ivory);
-      text-shadow: 0 0 30px rgba(165, 214, 111, 0.1);
-      letter-spacing: -1px;
-    }
-
-    .subtitle {
-      font-size: clamp(0.75rem, 2.5vw, 0.95rem);
-      letter-spacing: 2px;
-      color: var(--muted-moonlight);
-      text-transform: uppercase;
-      opacity: 0.7;
-      font-weight: 600;
-    }
-
-    /* ===== CONSOLE MACHINE ===== */
-
-    .console {
-      position: relative;
-      width: 100%;
-      max-width: 500px;
-      padding: 50px 40px;
-      background: linear-gradient(135deg, var(--midnight-forest) 0%, var(--haunted-teal) 50%, var(--midnight-forest) 100%);
-      border: 2px solid rgba(165, 214, 111, 0.1);
-      border-radius: 12px;
-      box-shadow: 
-        0 0 60px rgba(165, 214, 111, 0.05),
-        inset 0 0 40px rgba(165, 214, 111, 0.02),
-        0 20px 40px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-    }
-
-    .console::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(165, 214, 111, 0.03) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .console-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .console-label {
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      color: var(--muted-moonlight);
-      text-transform: uppercase;
-      margin-bottom: 30px;
-      font-weight: 600;
-      opacity: 0.7;
-    }
-
-    /* Display screen */
-    .display {
-      background: linear-gradient(135deg, rgba(8, 9, 11, 0.95) 0%, rgba(16, 27, 24, 0.95) 100%);
-      border: 1px solid rgba(165, 214, 111, 0.15);
-      border-radius: 8px;
-      padding: 40px 30px;
-      text-align: center;
-      margin-bottom: 40px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .display::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 30% 30%, rgba(165, 214, 111, 0.05), transparent);
-      pointer-events: none;
-    }
-
-    .display-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .display-result {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 12px;
-      color: var(--ghostly-ivory);
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .display-message {
-      font-size: 0.8rem;
-      letter-spacing: 1px;
-      color: var(--muted-moonlight);
-      text-transform: uppercase;
-      font-weight: 600;
-      opacity: 0.8;
-    }
-
-    /* Input section */
-    .input-section {
-      margin-bottom: 30px;
-    }
-
-    .input-wrapper {
-      position: relative;
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.7rem;
-      letter-spacing: 1.5px;
-      color: var(--muted-moonlight);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      font-weight: 600;
-      opacity: 0.7;
-    }
-
-    input[type='number'] {
-      width: 100%;
-      padding: 14px 16px;
-      font-family: 'Manrope', sans-serif;
-      font-size: 1rem;
-      background: linear-gradient(to right, rgba(16, 27, 24, 0.8), rgba(23, 61, 56, 0.8));
-      color: var(--ghostly-ivory);
-      border: 1px solid rgba(165, 214, 111, 0.2);
-      border-radius: 6px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(165, 214, 111, 0);
-    }
-
-    input[type='number']:focus {
-      outline: none;
-      border-color: rgba(165, 214, 111, 0.5);
-      box-shadow: 0 0 20px rgba(165, 214, 111, 0.15);
-      background: linear-gradient(to right, rgba(16, 27, 24, 0.9), rgba(23, 61, 56, 0.9));
-    }
-
-    input[type='number']::placeholder {
-      color: rgba(174, 185, 180, 0.4);
-    }
-
-    /* Remove number input arrows */
-    input[type='number']::-webkit-outer-spin-button,
-    input[type='number']::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input[type='number'][type='number'] {
-      -moz-appearance: textfield;
-    }
-
-    /* Primary button */
-    .btn-reveal {
-      width: 100%;
-      padding: 16px 24px;
-      font-family: 'Manrope', sans-serif;
-      font-size: clamp(0.85rem, 2.5vw, 1rem);
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, rgba(165, 214, 111, 0.15) 0%, rgba(165, 214, 111, 0.05) 100%);
-      color: var(--toxic-green);
-      border: 2px solid rgba(165, 214, 111, 0.3);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 30px rgba(165, 214, 111, 0);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-reveal::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: rgba(165, 214, 111, 0.1);
-      transition: left 0.3s ease;
-      z-index: 0;
-    }
-
-    .btn-reveal:hover {
-      border-color: rgba(165, 214, 111, 0.6);
-      box-shadow: 0 0 40px rgba(165, 214, 111, 0.2);
-      background: linear-gradient(135deg, rgba(165, 214, 111, 0.25) 0%, rgba(165, 214, 111, 0.1) 100%);
-    }
-
-    .btn-reveal:hover::before {
-      left: 100%;
-    }
-
-    .btn-reveal:active {
-      transform: scale(0.98);
-    }
-
-    button {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Quick test controls */
-    .quick-tests {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 30px;
-    }
-
-    .quick-test {
-      padding: 10px 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      background: rgba(165, 214, 111, 0.05);
-      color: var(--muted-moonlight);
-      border: 1px solid rgba(165, 214, 111, 0.15);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-transform: uppercase;
-    }
-
-    .quick-test:hover {
-      background: rgba(165, 214, 111, 0.1);
-      border-color: rgba(165, 214, 111, 0.3);
-      color: var(--ghostly-ivory);
-    }
-
-    .quick-test:active {
-      transform: scale(0.95);
-    }
-
-    @media (max-width: 480px) {
-      .quick-tests {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-        margin-top: 20px;
-      }
-
-      .quick-test {
-        padding: 8px 6px;
-        font-size: 0.65rem;
-      }
-    }
-
-    /* ===== RESULT STATES ===== */
-
-    .display-result.boo {
-      color: var(--toxic-green);
-      text-shadow: 0 0 20px rgba(165, 214, 111, 0.4);
-      animation: boo-reveal 0.5s ease-out;
-    }
-
-    .display-result.scary {
-      color: var(--burnt-orange);
-      text-shadow: 0 0 20px rgba(198, 107, 53, 0.4);
-      animation: scary-reveal 0.5s ease-out;
-    }
-
-    .display-result.booscary {
-      background: linear-gradient(90deg, var(--toxic-green), var(--burnt-orange), var(--toxic-green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: none;
-      animation: booscary-reveal 0.6s ease-out;
-    }
-
-    .display-result.normal {
-      color: var(--ghostly-ivory);
-      text-shadow: 0 0 10px rgba(174, 185, 180, 0.2);
-      animation: normal-reveal 0.4s ease-out;
-    }
-
-    @keyframes boo-reveal {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes scary-reveal {
-      0% {
-        opacity: 0;
-        transform: scale(0.8) rotate(-2deg);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    @keyframes booscary-reveal {
-      0% {
-        opacity: 0;
-        transform: scale(0.7);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes normal-reveal {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Console reaction backgrounds */
-    .console.reaction-boo {
-      background: linear-gradient(135deg, var(--midnight-forest) 0%, rgba(165, 214, 111, 0.1) 50%, var(--midnight-forest) 100%);
-      box-shadow: 
-        0 0 80px rgba(165, 214, 111, 0.15),
-        inset 0 0 60px rgba(165, 214, 111, 0.05),
-        0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .console.reaction-scary {
-      background: linear-gradient(135deg, var(--midnight-forest) 0%, rgba(198, 107, 53, 0.08) 50%, var(--midnight-forest) 100%);
-      box-shadow: 
-        0 0 80px rgba(198, 107, 53, 0.1),
-        inset 0 0 60px rgba(198, 107, 53, 0.03),
-        0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .console.reaction-booscary {
-      background: linear-gradient(135deg, rgba(165, 214, 111, 0.05) 0%, rgba(198, 107, 53, 0.08) 50%, rgba(165, 214, 111, 0.05) 100%);
-      box-shadow: 
-        0 0 100px rgba(165, 214, 111, 0.2),
-        0 0 80px rgba(198, 107, 53, 0.15),
-        inset 0 0 80px rgba(165, 214, 111, 0.08),
-        0 20px 40px rgba(0, 0, 0, 0.5);
-      animation: booscary-pulse 0.4s ease-out;
-    }
-
-    @keyframes booscary-pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.02);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      @keyframes booscary-pulse {
-        0%, 100% {
-          transform: scale(1);
-        }
-      }
-    }
-
-    /* ===== GRIMOIRE (HISTORY) ===== */
-
-    .grimoire {
-      width: 100%;
-      max-width: 500px;
-      margin-top: 40px;
-    }
-
-    .grimoire-title {
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      color: var(--muted-moonlight);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      font-weight: 600;
-      opacity: 0.7;
-    }
-
-    .grimoire-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-
-    .grimoire-list::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .grimoire-list::-webkit-scrollbar-track {
-      background: rgba(165, 214, 111, 0.05);
-      border-radius: 3px;
-    }
-
-    .grimoire-list::-webkit-scrollbar-thumb {
-      background: rgba(165, 214, 111, 0.2);
-      border-radius: 3px;
-    }
-
-    .grimoire-list::-webkit-scrollbar-thumb:hover {
-      background: rgba(165, 214, 111, 0.3);
-    }
-
-    .grimoire-entry {
-      display: grid;
-      grid-template-columns: auto 1fr auto auto;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 12px;
-      background: rgba(165, 214, 111, 0.03);
-      border-left: 2px solid rgba(165, 214, 111, 0.2);
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      animation: entry-rise 0.4s ease-out;
-    }
-
-    @keyframes entry-rise {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .grimoire-entry {
-        animation: none;
-      }
-    }
-
-    .entry-index {
-      color: var(--muted-moonlight);
-      opacity: 0.6;
-      min-width: 30px;
-    }
-
-    .entry-number {
-      color: var(--ghostly-ivory);
-      text-align: right;
-      min-width: 40px;
-    }
-
-    .entry-result {
-      text-align: right;
-      font-weight: 700;
-      letter-spacing: 1px;
-      min-width: 80px;
-    }
-
-    .entry-result.boo {
-      color: var(--toxic-green);
-    }
-
-    .entry-result.scary {
-      color: var(--burnt-orange);
-    }
-
-    .entry-result.booscary {
-      background: linear-gradient(90deg, var(--toxic-green), var(--burnt-orange));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .entry-result.normal {
-      color: var(--muted-moonlight);
-    }
-
-    .grimoire-controls {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-      justify-content: center;
-    }
-
-    .btn-clear {
-      padding: 10px 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: rgba(82, 29, 41, 0.2);
-      color: var(--muted-moonlight);
-      border: 1px solid rgba(82, 29, 41, 0.3);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-clear:hover {
-      background: rgba(82, 29, 41, 0.3);
-      border-color: rgba(82, 29, 41, 0.5);
-      color: var(--ghostly-ivory);
-    }
-
-    .btn-clear:active {
-      transform: scale(0.95);
-    }
-
-    /* ===== FOOTER ===== */
-
-    footer {
-      position: relative;
-      z-index: 1;
-      margin-top: 80px;
-      text-align: center;
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      color: var(--muted-moonlight);
-      opacity: 0.5;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    /* ===== PARTICLE CONTAINER ===== */
-
-    .particle-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      will-change: transform, opacity;
-    }
-
-    /* ===== RESPONSIVE ===== */
-
-    @media (max-width: 768px) {
-      main {
-        padding: 30px 15px;
-        gap: 40px;
-      }
-
-      .console {
-        padding: 40px 25px;
-        max-width: none;
-      }
-
-      .tree {
-        opacity: 0.3;
-      }
-
-      .display {
-        min-height: 100px;
-        padding: 30px 20px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      main {
-        padding: 20px 12px;
-        gap: 30px;
-      }
-
-      .console {
-        padding: 30px 20px;
-        border-radius: 8px;
-      }
-
-      .title {
-        font-size: 2rem;
-      }
-
-      .display {
-        min-height: 90px;
-        padding: 25px 15px;
-        margin-bottom: 25px;
-      }
-
-      .display-result {
-        font-size: 2rem;
-        min-height: 50px;
-      }
-
-      .display-message {
-        font-size: 0.7rem;
-      }
-
-      .console-label {
-        margin-bottom: 20px;
-      }
-
-      .grimoire {
-        max-width: none;
-        margin-top: 30px;
-      }
-
-      footer {
-        margin-top: 50px;
-        font-size: 0.65rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cursed Number</title>
+<style>
+  :root {
+    --bg: #050505;
+    --accent: #8b0000;
+    --glow: #ff2222;
+    --text: #d0d0d0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Courier New", Courier, monospace;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(80,0,0,0.18) 0%, transparent 70%);
+    pointer-events: none;
+    animation: pulse 7s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.85; }
+  }
+
+  body.shake {
+    animation: screenShake 0.35s ease-in-out;
+  }
+
+  @keyframes screenShake {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-6px, 3px); }
+    40% { transform: translate(5px, -4px); }
+    60% { transform: translate(-4px, 2px); }
+    80% { transform: translate(3px, -2px); }
+  }
+
+  #title {
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-shadow: 0 0 8px #500, 0 0 20px #300;
+    margin-bottom: 1.2rem;
+    animation: titleFlicker 5s infinite;
+    z-index: 2;
+  }
+
+  @keyframes titleFlicker {
+    0%, 94%, 100% { opacity: 1; }
+    95% { opacity: 0.4; }
+    96% { opacity: 1; }
+    97% { opacity: 0.2; }
+    98% { opacity: 1; }
+  }
+
+  #number-wrap {
+    position: relative;
+    z-index: 2;
+  }
+
+  #number {
+    font-size: clamp(4rem, 18vw, 14rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--glow);
+    text-shadow: 0 0 10px #800, 0 0 30px #400;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.12s ease, color 0.12s ease;
+    padding: 0.2em 0.4em;
+  }
+
+  #number:hover {
+    transform: scale(1.05);
+    color: #ff5555;
+  }
+
+  #number:active {
+    transform: scale(0.95);
+  }
+
+  #number::before,
+  #number::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  #number::before {
+    color: #ff0033;
+    animation: glitch-1 2.4s infinite linear alternate-reverse;
+  }
+
+  #number::after {
+    color: #00ff66;
+    animation: glitch-2 2.8s infinite linear alternate-reverse;
+  }
+
+  #number.intense::before { animation-duration: 0.45s; }
+  #number.intense::after { animation-duration: 0.5s; }
+
+  @keyframes glitch-1 {
+    0%, 88%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+    90% { clip-path: inset(18% 0 52% 0); transform: translate(-5px, 2px); }
+    92% { clip-path: inset(62% 0 12% 0); transform: translate(4px, -4px); }
+    94% { clip-path: inset(8% 0 68% 0); transform: translate(-3px, 1px); }
+    96% { clip-path: inset(72% 0 6% 0); transform: translate(6px, -2px); }
+  }
+
+  @keyframes glitch-2 {
+    0%, 82%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+    84% { clip-path: inset(38% 0 32% 0); transform: translate(5px, -3px); }
+    86% { clip-path: inset(6% 0 78% 0); transform: translate(-4px, 3px); }
+    88% { clip-path: inset(68% 0 8% 0); transform: translate(3px, -5px); }
+    90% { clip-path: inset(22% 0 48% 0); transform: translate(-6px, 2px); }
+  }
+
+  #whisper {
+    margin-top: 2rem;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: #999;
+    text-align: center;
+    min-height: 2.2em;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+    transition: opacity 0.35s ease;
+    z-index: 2;
+  }
+
+  #whisper.fade { opacity: 0; }
+
+  #status {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: #555;
+    letter-spacing: 0.12em;
+    z-index: 2;
+  }
+
+  .particle {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    background: #ff2222;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.9;
+    box-shadow: 0 0 6px #f00;
+  }
+
+  #hint {
+    position: fixed;
+    bottom: 1.2rem;
+    font-size: 0.72rem;
+    color: #444;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    z-index: 2;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
 </head>
 <body>
-  <!-- Particle container for JS-driven effects -->
-  <div class="particle-container" id="particleContainer"></div>
-
-  <!-- Forest background layers -->
-  <div class="forest-fog"></div>
-
-  <!-- Trees -->
-  <div class="tree tree-1">
-    <div class="tree-trunk"></div>
-    <div class="tree-canopy"></div>
-    <div class="tree-branches"></div>
+  <div id="title">The Cursed Number</div>
+  <div id="number-wrap">
+    <div id="number" data-text="13">13</div>
   </div>
-
-  <div class="tree tree-2">
-    <div class="tree-trunk"></div>
-    <div class="tree-canopy"></div>
-    <div class="tree-branches"></div>
-  </div>
-
-  <div class="tree tree-3">
-    <div class="tree-trunk"></div>
-    <div class="tree-canopy"></div>
-  </div>
-
-  <div class="tree tree-4">
-    <div class="tree-trunk"></div>
-    <div class="tree-canopy"></div>
-  </div>
-
-  <!-- Distant arch -->
-  <div class="distant-arch">
-    <div class="arch-stone arch-left"></div>
-    <div class="arch-stone arch-right"></div>
-  </div>
-
-  <!-- Misty ghosts -->
-  <div class="ghost" style="top: 15%; left: 8%; animation-delay: 0s;">
-    <div class="ghost-shape"></div>
-    <div class="ghost-text">boo</div>
-  </div>
-
-  <div class="ghost" style="top: 25%; right: 10%; animation-delay: 1.2s;">
-    <div class="ghost-shape"></div>
-    <div class="ghost-text">boo</div>
-  </div>
-
-  <div class="ghost" style="top: 20%; left: 50%; animation-delay: 2.4s; opacity: 0.15;">
-    <div class="ghost-shape"></div>
-    <div class="ghost-text">boo</div>
-  </div>
-
-  <div class="ghost" style="top: 30%; right: 25%; animation-delay: 0.8s; opacity: 0.12;">
-    <div class="ghost-shape"></div>
-    <div class="ghost-text">boo</div>
-  </div>
-
-  <div class="ghost" style="top: 18%; left: 70%; animation-delay: 1.6s;">
-    <div class="ghost-shape"></div>
-    <div class="ghost-text">boo</div>
-  </div>
-
-  <!-- Main content -->
-  <main>
-    <!-- Header -->
-    <header class="header">
-      <div class="eyebrow">Halloween CodePen Challenge 2026</div>
-      <h1 class="title">The Cursed Number</h1>
-      <p class="subtitle">A FizzBuzz Experiment</p>
-    </header>
-
-    <!-- Console machine -->
-    <section class="console" id="console">
-      <div class="console-content">
-        <div class="console-label">The Ritual Console</div>
-
-        <!-- Display -->
-        <div class="display">
-          <div class="display-content">
-            <div class="display-result" id="displayResult">The forest is listening...</div>
-            <div class="display-message" id="displayMessage"></div>
-          </div>
-        </div>
-
-        <!-- Input section -->
-        <div class="input-section">
-          <div class="input-wrapper">
-            <label for="numberInput">Enter a number...</label>
-            <input
-              type="number"
-              id="numberInput"
-              placeholder="ENTER A NUMBER..."
-              aria-label="Enter a positive integer"
-              aria-live="polite"
-            />
-          </div>
-
-          <button class="btn-reveal" id="revealButton">Reveal The Curse</button>
-
-          <!-- Quick tests -->
-          <div class="quick-tests">
-            <button class="quick-test" data-number="3">3 · BOO</button>
-            <button class="quick-test" data-number="5">5 · SCARY</button>
-            <button class="quick-test" data-number="15">15 · BOOSCARY</button>
-            <button class="quick-test" data-number="31">31 · NORMAL</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Grimoire (history) -->
-    <section class="grimoire">
-      <h2 class="grimoire-title">The Grimoire</h2>
-      <div class="grimoire-list" id="grimoireList"></div>
-      <div class="grimoire-controls">
-        <button class="btn-clear" id="clearButton">Clear Grimoire</button>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    ☽ The numbers never lie. The forest never forgets. ☽
-  </footer>
+  <div id="whisper">It watches.</div>
+  <div id="status">touches: 0</div>
+  <div id="hint">click · double-click · hover · space / any key</div>
 
   <script>
-    /* ===== CORE LOGIC ===== */
+    const numberEl = document.getElementById('number');
+    const whisperEl = document.getElementById('whisper');
+    const statusEl = document.getElementById('status');
+    const titleEl = document.getElementById('title');
+    const body = document.body;
 
-    /**
-     * ScaryFizzBuzz - The Challenge Implementation
-     */
-    function ScaryFizzBuzz(number) {
-      // Validate: must be a positive integer
-      if (typeof number !== 'number') {
-        throw new RangeError('THE SPELL REQUIRES A POSITIVE INTEGER.');
+    let current = 13;
+    let clicks = 0;
+    let audioCtx = null;
+    let drone = null;
+    let droneGain = null;
+    let lastHoverSound = 0;
+
+    const whispers = [
+      "It sees you.",
+      "Feed it.",
+      "The count rises.",
+      "Do not look away.",
+      "More... always more.",
+      "Your number is known.",
+      "Closer than you think.",
+      "The curse deepens.",
+      "Again.",
+      "It remembers every touch.",
+      "Stop? Too late.",
+      "666 is only the beginning.",
+      "The digits rearrange when you blink.",
+      "You have been counted.",
+      "It grows hungrier.",
+      "One more. Just one more.",
+      "The sound is inside now.",
+      "Do not let go."
+    ];
+
+    function getAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-
-      if (!Number.isInteger(number)) {
-        throw new RangeError('THE SPELL REQUIRES A POSITIVE INTEGER.');
-      }
-
-      if (number <= 0) {
-        throw new RangeError('THE SPELL REQUIRES A POSITIVE INTEGER.');
-      }
-
-      // Check divisibility by 15 first (both 3 and 5)
-      if (number % 15 === 0) {
-        return 'BooScary';
-      }
-
-      // Check divisibility by 3
-      if (number % 3 === 0) {
-        return 'Boo';
-      }
-
-      // Check divisibility by 5
-      if (number % 5 === 0) {
-        return 'Scary';
-      }
-
-      // Otherwise, return the number as a string
-      return String(number);
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
     }
 
-    /* ===== DOM REFERENCES ===== */
+    function startDrone() {
+      if (drone) return;
+      const ctx = getAudio();
+      drone = ctx.createOscillator();
+      droneGain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
 
-    const numberInput = document.getElementById('numberInput');
-    const revealButton = document.getElementById('revealButton');
-    const displayResult = document.getElementById('displayResult');
-    const displayMessage = document.getElementById('displayMessage');
-    const console_ = document.getElementById('console');
-    const grimoireList = document.getElementById('grimoireList');
-    const clearButton = document.getElementById('clearButton');
-    const quickTestButtons = document.querySelectorAll('.quick-test');
-    const particleContainer = document.getElementById('particleContainer');
+      drone.type = 'sawtooth';
+      drone.frequency.value = 38;
+      filter.type = 'lowpass';
+      filter.frequency.value = 120;
 
-    /* ===== STATE ===== */
+      droneGain.gain.setValueAtTime(0, ctx.currentTime);
+      droneGain.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 2);
 
-    let history = [];
-    const MAX_HISTORY = 8;
+      drone.connect(filter);
+      filter.connect(droneGain);
+      droneGain.connect(ctx.destination);
+      drone.start();
+    }
 
-    /* ===== PARTICLE SYSTEM (JS-DRIVEN) ===== */
-
-    class Particle {
-      constructor(x, y, type = 'ember') {
-        this.x = x;
-        this.y = y;
-        this.type = type;
-        this.vx = (Math.random() - 0.5) * 3;
-        this.vy = (Math.random() - 0.5) * 2 - 1.5;
-        this.life = 1;
-        this.maxLife = type === 'ember' ? 1.5 : 2;
-        this.size = type === 'ember' ? 4 + Math.random() * 6 : 2 + Math.random() * 4;
-
-        this.element = document.createElement('div');
-        this.element.className = 'particle';
-        this.element.style.cssText = `
-          left: ${this.x}px;
-          top: ${this.y}px;
-          width: ${this.size}px;
-          height: ${this.size}px;
-          border-radius: 50%;
-          background: ${type === 'ember' ? '#C66B35' : '#A5D66F'};
-          box-shadow: 0 0 ${this.size}px ${type === 'ember' ? '#C66B35' : '#A5D66F'};
-          opacity: ${this.life};
-          pointer-events: none;
-        `;
-        particleContainer.appendChild(this.element);
-      }
-
-      update(deltaTime = 0.016) {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vy -= 0.1; // Gravity
-        this.life -= deltaTime / this.maxLife;
-
-        if (this.life <= 0) {
-          this.element.remove();
-          return false;
-        }
-
-        const opacity = Math.max(0, this.life);
-        this.element.style.cssText = `
-          left: ${this.x}px;
-          top: ${this.y}px;
-          width: ${this.size}px;
-          height: ${this.size}px;
-          border-radius: 50%;
-          background: ${this.type === 'ember' ? '#C66B35' : '#A5D66F'};
-          box-shadow: 0 0 ${this.size}px ${this.type === 'ember' ? '#C66B35' : '#A5D66F'};
-          opacity: ${opacity};
-          pointer-events: none;
-        `;
-
-        return true;
+    function updateDroneIntensity() {
+      if (!droneGain || !audioCtx) return;
+      const target = Math.min(0.025 + clicks * 0.0015, 0.09);
+      droneGain.gain.linearRampToValueAtTime(target, audioCtx.currentTime + 0.8);
+      if (drone) {
+        drone.frequency.linearRampToValueAtTime(32 + Math.min(clicks * 0.4, 25), audioCtx.currentTime + 1);
       }
     }
 
-    const particles = [];
-
-    function spawnParticles(count, type, x, y) {
-      for (let i = 0; i < count; i++) {
-        particles.push(new Particle(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 40, type));
-      }
-    }
-
-    function animateParticles() {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        if (!particles[i].update()) {
-          particles.splice(i, 1);
-        }
-      }
-      if (particles.length > 0) {
-        requestAnimationFrame(animateParticles);
-      }
-    }
-
-    /* ===== DISPLAY LOGIC ===== */
-
-    function getResultCategory(result) {
-      if (result === 'Boo') return 'boo';
-      if (result === 'Scary') return 'scary';
-      if (result === 'BooScary') return 'booscary';
-      return 'normal';
-    }
-
-    function getResultMessage(result) {
-      const messages = {
-        boo: 'Something has awakened in the darkness.',
-        scary: 'Something is watching you from the trees.',
-        booscary: 'The ancient curse has been unleashed.',
-        normal: 'The ancient symbols remain silent.'
-      };
-      return messages[getResultCategory(result)];
-    }
-
-    function clearConsoleReactions() {
-      console_.classList.remove('reaction-boo', 'reaction-scary', 'reaction-booscary');
-    }
-
-    function showResult(number, result) {
-      const category = getResultCategory(result);
-
-      // Clear previous animations by removing classes
-      displayResult.className = 'display-result';
-
-      // Trigger reflow to restart animations
-      void displayResult.offsetWidth;
-
-      // Apply new animation
-      displayResult.classList.add(category);
-      displayResult.textContent = result;
-
-      const message = getResultMessage(result);
-      displayMessage.textContent = message;
-
-      // Console reaction
-      clearConsoleReactions();
-      if (category !== 'normal') {
-        console_.classList.add(`reaction-${category}`);
-      }
-
-      // Particle effects
-      const consoleRect = console_.getBoundingClientRect();
-      const centerX = consoleRect.left + consoleRect.width / 2;
-      const centerY = consoleRect.top + consoleRect.height / 2;
-
-      if (category === 'boo') {
-        spawnParticles(8, 'green', centerX, centerY);
-      } else if (category === 'scary') {
-        spawnParticles(8, 'ember', centerX, centerY);
-      } else if (category === 'booscary') {
-        spawnParticles(6, 'green', centerX, centerY);
-        spawnParticles(6, 'ember', centerX, centerY);
-      } else {
-        spawnParticles(4, 'green', centerX, centerY);
-      }
-
-      animateParticles();
-    }
-
-    /* ===== HISTORY (GRIMOIRE) ===== */
-
-    function addHistoryEntry(number, result) {
-      const category = getResultCategory(result);
-
-      // Prevent duplicates on same number
-      if (history.length > 0 && history[0].number === number && history[0].result === result) {
-        return;
-      }
-
-      history.unshift({ number, result, category });
-
-      if (history.length > MAX_HISTORY) {
-        history.pop();
-      }
-
-      renderHistory();
-    }
-
-    function renderHistory() {
-      grimoireList.innerHTML = '';
-
-      history.forEach((entry, index) => {
-        const entryEl = document.createElement('div');
-        entryEl.className = 'grimoire-entry';
-
-        const indexEl = document.createElement('div');
-        indexEl.className = 'entry-index';
-        indexEl.textContent = String(index + 1).padStart(3, '0');
-
-        const numberEl = document.createElement('div');
-        numberEl.className = 'entry-number';
-        numberEl.textContent = entry.number;
-
-        const resultEl = document.createElement('div');
-        resultEl.className = `entry-result ${entry.category}`;
-        resultEl.textContent = entry.result;
-
-        entryEl.appendChild(indexEl);
-        entryEl.appendChild(numberEl);
-        entryEl.appendChild(resultEl);
-
-        grimoireList.appendChild(entryEl);
-      });
-    }
-
-    function clearHistory() {
-      history = [];
-      renderHistory();
-    }
-
-    /* ===== EVENT HANDLERS ===== */
-
-    function handleTest() {
-      const inputValue = numberInput.value.trim();
-
-      if (!inputValue) {
-        displayResult.className = 'display-result';
-        displayResult.textContent = 'Enter a number...';
-        displayMessage.textContent = '';
-        return;
-      }
-
-      const number = Number(inputValue);
-
+    function playTouchSound(power = 1, type = 'normal') {
       try {
-        const result = ScaryFizzBuzz(number);
-        showResult(number, result);
-        addHistoryEntry(number, result);
-        numberInput.value = '';
-        numberInput.focus();
-      } catch (error) {
-        displayResult.className = 'display-result';
-        displayResult.textContent = 'The spell requires a positive integer.';
-        displayMessage.textContent = '';
+        const ctx = getAudio();
+        const now = ctx.currentTime;
+
+        // Main descending saw
+        const osc1 = ctx.createOscillator();
+        const g1 = ctx.createGain();
+        osc1.type = type === 'heavy' ? 'square' : 'sawtooth';
+        const startF = (type === 'heavy' ? 90 : 55) + Math.random() * 70 * power;
+        osc1.frequency.setValueAtTime(startF, now);
+        osc1.frequency.exponentialRampToValueAtTime(12, now + (type === 'heavy' ? 1.1 : 0.65));
+        g1.gain.setValueAtTime(0.1 * power, now);
+        g1.gain.exponentialRampToValueAtTime(0.001, now + (type === 'heavy' ? 1.2 : 0.75));
+        osc1.connect(g1).connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + (type === 'heavy' ? 1.3 : 0.8));
+
+        // High dissonant layer
+        const osc2 = ctx.createOscillator();
+        const g2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(320 + Math.random() * 280, now);
+        osc2.frequency.exponentialRampToValueAtTime(60, now + 0.28);
+        g2.gain.setValueAtTime(0.05 * power, now);
+        g2.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+        osc2.connect(g2).connect(ctx.destination);
+        osc2.start(now);
+        osc2.stop(now + 0.35);
+
+        // Soft noise burst
+        if (power > 1.2) {
+          const bufferSize = ctx.sampleRate * 0.2;
+          const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
+          const noise = ctx.createBufferSource();
+          const noiseGain = ctx.createGain();
+          const noiseFilter = ctx.createBiquadFilter();
+          noise.buffer = noiseBuffer;
+          noiseFilter.type = 'highpass';
+          noiseFilter.frequency.value = 800;
+          noiseGain.gain.setValueAtTime(0.08 * power, now);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          noise.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
+          noise.start(now);
+        }
+      } catch (e) {}
+    }
+
+    function playHoverSound() {
+      const now = Date.now();
+      if (now - lastHoverSound < 180) return;
+      lastHoverSound = now;
+      try {
+        const ctx = getAudio();
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(180 + Math.random() * 40, t);
+        osc.frequency.exponentialRampToValueAtTime(90, t + 0.12);
+        g.gain.setValueAtTime(0.03, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.15);
+      } catch (e) {}
+    }
+
+    function spawnParticles(x, y, count = 10) {
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 3 + Math.random() * 7;
+        p.style.width = p.style.height = size + 'px';
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        p.style.background = Math.random() > 0.65 ? '#330000' : '#ff3333';
+        document.body.appendChild(p);
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 50 + Math.random() * 140;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 30;
+
+        p.animate([
+          { transform: 'translate(0,0) scale(1)', opacity: 0.95 },
+          { transform: `translate(${dx}px, ${dy}px) scale(0.15)`, opacity: 0 }
+        ], {
+          duration: 550 + Math.random() * 600,
+          easing: 'ease-out'
+        }).onfinish = () => p.remove();
       }
     }
 
-    function handleQuickTest(event) {
-      const number = parseInt(event.target.dataset.number, 10);
-      numberInput.value = number;
-      handleTest();
+    function cursedUpdate(strength = 1) {
+      const r = Math.random();
+      const abs = Math.abs(current);
+
+      if (r < 0.14 && abs > 9) {
+        const rev = String(abs).split('').reverse().join('');
+        current = parseInt(rev, 10) * (current < 0 ? -1 : 1);
+      } else if (r < 0.26) {
+        current = Math.floor(current * (0.5 + Math.random() * 2.4 * strength));
+      } else if (r < 0.34) {
+        current = current * 10 + Math.floor(Math.random() * 10);
+      } else {
+        const delta = (Math.random() - 0.42) * Math.max(25, abs * 0.18) * strength;
+        current = Math.floor(current + delta);
+      }
+
+      if (Math.abs(current) > 999999999) {
+        current = Math.floor((Math.random() - 0.5) * 12000);
+      }
+      if (current === 0) current = clicks % 2 === 0 ? 1 : -1;
+      return current;
     }
 
-    revealButton.addEventListener('click', handleTest);
-    numberInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        handleTest();
+    function showWhisper(text) {
+      whisperEl.classList.add('fade');
+      setTimeout(() => {
+        whisperEl.textContent = text;
+        whisperEl.classList.remove('fade');
+      }, 180);
+    }
+
+    function interact(e, power = 1, type = 'normal') {
+      clicks++;
+      startDrone();
+      updateDroneIntensity();
+
+      current = cursedUpdate(power);
+      const display = current.toLocaleString('en-US');
+      numberEl.textContent = display;
+      numberEl.setAttribute('data-text', display);
+
+      numberEl.classList.add('intense');
+      setTimeout(() => numberEl.classList.remove('intense'), 380 + power * 40);
+
+      const rect = numberEl.getBoundingClientRect();
+      const cx = (e && e.clientX) ? e.clientX : rect.left + rect.width / 2;
+      const cy = (e && e.clientY) ? e.clientY : rect.top + rect.height / 2;
+      spawnParticles(cx, cy, Math.floor(8 + power * 6 + Math.min(clicks * 0.3, 10)));
+
+      playTouchSound(power, type);
+
+      if (power >= 1.6) {
+        body.classList.add('shake');
+        setTimeout(() => body.classList.remove('shake'), 350);
       }
+
+      statusEl.textContent = `touches: ${clicks}`;
+
+      if (clicks % 2 === 0 || Math.random() < 0.3) {
+        showWhisper(whispers[Math.floor(Math.random() * whispers.length)]);
+      }
+
+      if (clicks > 12) {
+        document.documentElement.style.setProperty('--bg', `hsl(0, ${Math.min(45, 8 + clicks * 0.6)}%, 3%)`);
+      }
+
+      if (clicks > 25 && Math.random() < 0.12) {
+        titleEl.textContent = "THE CURSED NUMBER";
+        setTimeout(() => titleEl.textContent = "The Cursed Number", 900);
+      }
+    }
+
+    // Click
+    numberEl.addEventListener('click', (e) => interact(e, 1, 'normal'));
+
+    // Double-click = stronger
+    numberEl.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      interact(e, 1.8, 'heavy');
     });
 
-    quickTestButtons.forEach((btn) => {
-      btn.addEventListener('click', handleQuickTest);
+    // Hover sound + subtle twitch
+    numberEl.addEventListener('mouseenter', () => {
+      playHoverSound();
+      numberEl.classList.add('intense');
+      setTimeout(() => numberEl.classList.remove('intense'), 120);
     });
 
-    clearButton.addEventListener('click', clearHistory);
-
-    // Remove console reactions after animation
-    console_.addEventListener('animationend', () => {
-      setTimeout(clearConsoleReactions, 200);
+    // Keyboard (space or any key)
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      const power = e.code === 'Space' ? 1.4 : 0.9;
+      interact(null, power, power > 1.2 ? 'heavy' : 'normal');
     });
 
-    // Focus on input on page load
-    window.addEventListener('load', () => {
-      numberInput.focus();
-    });
+    // Touch support
+    numberEl.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      interact(e.touches[0], 1, 'normal');
+    }, { passive: false });
+
+    // Ambient random glitch after activity
+    setInterval(() => {
+      if (clicks > 3 && Math.random() < 0.35) {
+        numberEl.classList.add('intense');
+        setTimeout(() => numberEl.classList.remove('intense'), 140);
+        if (Math.random() < 0.4) playHoverSound();
+      }
+    }, 3800);
+
+    // Initial
+    numberEl.setAttribute('data-text', '13');
   </script>
 </body>
 </html>
