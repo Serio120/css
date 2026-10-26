@@ -1,0 +1,21 @@
+body {
+  background-color: #f1c40f;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  min-height: 100vh; /* necesario: sin esto el body solo mide lo que ocupa su contenido y el hover casi no se nota */
+  transition: background-color 0.5s ease;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #e67e22;
+  color: white;
+}
+
+a { color: white; }
