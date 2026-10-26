@@ -1,0 +1,25 @@
+body {
+  background-color: #3498db;
+  color: white;
+  transition: background-color 0.5s ease; /* suaviza el cambio de color */
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+}
+
+.btn-azul     { background-color: #3498db; }
+.btn-rojo     { background-color: #e74c3c; }
+.btn-verde    { background-color: #2ecc71; }
+.btn-amarillo { background-color: #f1c40f; }
+
+a { color: white; }
