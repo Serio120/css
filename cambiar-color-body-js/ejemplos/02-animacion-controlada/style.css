@@ -1,0 +1,32 @@
+body {
+  background-color: #3498db;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  min-height: 100vh;
+  transition: background-color 0.5s ease;
+}
+
+/* La animación solo se ejecuta cuando el body tiene la clase "animado" */
+body.animado {
+  animation: cambiarColor 5s infinite alternate;
+}
+
+@keyframes cambiarColor {
+  0%   { background-color: #3498db; }
+  50%  { background-color: #e74c3c; }
+  100% { background-color: #2ecc71; }
+}
+
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #9b59b6;
+  color: white;
+}
+
+a { color: white; }
